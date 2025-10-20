@@ -1,18 +1,37 @@
 <h1>Title: " <%= @article.title %>"</h1>
 
 <p>Content: "<%= @article.content %>"</p>
+<div data-controller="comments" data-comments-article-id-value="<%= @article.id %>">
+  <h2>Comments(<span data-comments-target="count"><%= @article.comments.count %></span>)</h2>
+  <ul data-comments-target="list">
 
-<h2>Comments</h2>
-<% @article.comments.each do |comment| %>
-  <p><%= comment.content %> <%= link_to "delete", article_comment_path(article_id: @article.id, id: comment.id), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"}%></p>
-<% end %>
-<h3>Add a new comment:</h3>
-<%= form_with(model: [@article, Comment.new], local: true) do |form| %>
-  <div>
-    <%= form.label :content %><br>
-    <%= form.text_area :content %>
-  </div>
-  <div>
-    <%= form.submit "Add Comment" %>
-  </div>
-<% end %>
+  <% @article.comments.each do |comment| %>
+    <li><%= comment.content %> <button data-id ="<%= comment.id %>" data-action="click->comments#delete">🗑️</button></li>
+  <% end %>
+  </ul>
+  <h3>Add a new comment:</h3>
+  <%= form_with(model: [@article, Comment.new], local: true) do |form| %>
+    <div>
+      <%= form.label :content %><br>
+      <%= form.text_area :content %>
+    </div>
+    <div>
+      <%= form.submit "Add Comment" %>
+    </div>
+  <% end %>
+
+
+<%# <div data-controller="comments" data-comments-article-id-value="<%= @article.id %>">
+  <%# <h2>Commentaires (<span data-comments-target="count"><%= @article.comments.count %></span>)</h2> %>
+  <%# <ul data-comments-target="list"> %>
+    <%# <% @article.comments.each do |comment| %> %>
+      <%# <li data-id="<%= comment.id %>"> %>
+        <%# <%= comment.content <button data-action="click->comments#delete">🗑️</button></li> %> %>
+    <%# <% end %> %>
+  <%# </ul> %>
+
+  <form data-action="submit->comments#create">
+    <input type="text" data-comments-target="input" placeholder="Ajouter un commentaire..." id="content" name="content" />
+    <button type="submit">Envoyer</button>
+  </form>
+</div>
