@@ -30,12 +30,14 @@ export default class extends Controller {
       const commentsList = this.listTarget;
       const newComment = document.createElement('li');
       newComment.innerHTML = `
-      <p>${data.content}
-      <button data-action="click->comments#delete" data-id="${data.id}">🗑️</button></p>
+      ${data.content}
+      <button data-action="click->comments#delete" data-id="${data.id}">🗑️</button>
       `;
       commentsList.appendChild(newComment);
       // Clear the form
       this.inputTarget.value = '';
+      // Update the comments count
+      this.countTarget.textContent = parseInt(this.countTarget.textContent) + 1;
     })
     .catch(error => {
       console.error('Error:', error);
@@ -43,31 +45,34 @@ export default class extends Controller {
   }
 
   delete(event) {
-    event.preventDefault();
-    const url = "/articles/" + this.articleIdValue + "/comments/" + event.currentTarget.dataset.id;
-    const commentElement = event.currentTarget.parentElement;
+    const result = confirm("Want to delete?");
+    if (result) {
+      //Logic to delete the item
+      event.preventDefault();
+      const url = "/articles/" + this.articleIdValue + "/comments/" + event.currentTarget.dataset.id;
+      const commentElement = event.currentTarget.parentElement;
 
-    fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        // Remove the comment element from the
-        console.log(commentElement);
-
-        if (commentElement) {
-          commentElement.remove();
+      fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
-      } else {
-        console.error('Failed to delete comment');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+      })
+      .then(response => {
+        if (response.ok) {
+          // Remove the comment element from the
+          if (commentElement) {
+            commentElement.remove();
+            this.countTarget.textContent = parseInt(this.countTarget.textContent) - 1;
+          }
+        } else {
+          console.error('Failed to delete comment');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
   }
 }

@@ -1,0 +1,33 @@
+h1 {
+  text-align: center;
+}
+
+.comments-content {
+  max-width: 600px;
+  background-color: bisque;
+}
+
+h2 {
+  text-align: center;
+  color: darkblue;
+  background-color: lightgray;
+}
+
+.comments-list {
+  text-align: center;
+  list-style-type: none;
+}
+
+form {
+  input {
+    width: 80%;
+    padding: 10px;
+    margin-right: 10px;
+  }
+}
+
+.delete-comment {
+  animation-name: bounce;
+  animation-duration: 5s;
+  animation-timing-function: ease-in-out;
+}

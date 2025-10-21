@@ -13,3 +13,9 @@
  *= require_tree .
  *= require_self
  */
+@import 'comment';
+
+.articles-list {
+  display: flex;
+  flex-direction: column;
+}

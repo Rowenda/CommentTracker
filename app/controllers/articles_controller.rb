@@ -8,10 +8,6 @@ class ArticlesController < ApplicationController
     @comments = @article.comments
   end
 
-  def new
-    @article = Article.new
-  end
-
   def create
     @article = Article.new(article_params)
     if @article.save
