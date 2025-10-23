@@ -12,13 +12,13 @@ export default class extends Controller {
   create(event) {
 
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
     const url = "/articles/" + this.articleIdValue + "/comments";
 
     fetch(url, {
       method: 'POST',
-      body: formData,
+      body: JSON.stringify({ comment: { content: this.inputTarget.value } }),
       headers: {
+        "Content-Type": "application/json",
         'Accept': 'application/json',
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
       }
@@ -34,6 +34,7 @@ export default class extends Controller {
       <button data-action="click->comments#delete" data-id="${data.id}">🗑️</button>
       `;
       commentsList.appendChild(newComment);
+      alert("Comment added!");
       // Clear the form
       this.inputTarget.value = '';
       // Update the comments count
@@ -63,7 +64,8 @@ export default class extends Controller {
         if (response.ok) {
           // Remove the comment element from the
           if (commentElement) {
-            commentElement.remove();
+            commentElement.classList.add("deleted-comment")
+            setTimeout(() => commentElement.remove(), 300)
             this.countTarget.textContent = parseInt(this.countTarget.textContent) - 1;
           }
         } else {
